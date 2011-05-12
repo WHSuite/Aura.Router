@@ -34,13 +34,12 @@ To create a route for your application, instantiate a `Map` object from the `aur
     
     // add a complex named route
     $map->add('read', '/blog/read/{:id}{:format}', array(
-        'path' => ,
         'params' => array(
             'id'     => '(\d+)',
             'format' => '(\..+)?',
         ),
         'values' => array(
-            'controller => 'blog',
+            'controller' => 'blog',
             'action'    => 'read'
             'format'    => 'html',
         ),
