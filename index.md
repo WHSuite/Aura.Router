@@ -4,8 +4,8 @@ layout: default
 ---
 
 
-Introduction
-============
+Aura Router
+===========
 
 Aura Router is a PHP 5.3+ library that implements web routing. Given a URI path and a copy of `$_SERVER`, it will extract controller, action, and parameter values for a specific application route.
 
