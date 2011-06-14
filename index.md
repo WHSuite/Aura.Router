@@ -24,7 +24,7 @@ To create a route for your application, instantiate a `Map` object from the `aur
 
     <?php
     // create the map object
-    $map = require '/path/to/aura.router/scripts/instance.php';
+    $map = require '/path/to/Aura.Router/scripts/instance.php';
     
     // add a simple named route without params
     $map->add('home', '/');
@@ -187,7 +187,7 @@ Here is a full route specification named `read` with all keys in place:
             return true;
             
         },
-        'generate' => function(\aura\router\Route $route, array $data) {
+        'generate' => function(\Aura\Router\Route $route, array $data) {
             $data['foo'] = 'bar';
             return $data;
         }
@@ -333,10 +333,10 @@ Note that you can specify a `name_prefix` as part of the common route informatio
     );
 
     // create the route factory
-    $route_factory = new \aura\router\RouteFactory;
+    $route_factory = new \Aura\Router\RouteFactory;
     
     // create a Map with attached route groups
-    $map = new \aura\router\Map($route_factory, $attach);
+    $map = new \Aura\Router\Map($route_factory, $attach);
 
 This technique can be very effective with modular application packages. Each package can return an array for its own route group specification, and a system-specific configuration mechanism can collect each spec into a common array for the `Map`.  For example:
 
@@ -349,10 +349,10 @@ This technique can be very effective with modular application packages. Each pac
     );
     
     // create the route factory
-    $route_factory = new \aura\router\RouteFactory;
+    $route_factory = new \Aura\Router\RouteFactory;
     
     // create a Map with attached route groups
-    $map = new \aura\router\Map($route_factory, $attach);
+    $map = new \Aura\Router\Map($route_factory, $attach);
 
 
 Caching
@@ -364,7 +364,7 @@ The following is a naive example for file-based caching and restoring of `Map` r
 
     <?php
     // create a Map object
-    $map = require '/path/to/aura.router/instance.php';
+    $map = require '/path/to/Aura.Router/instance.php';
     
     // the cache file location
     $cache = '/path/to/routes.cache';
