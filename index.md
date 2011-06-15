@@ -20,7 +20,7 @@ Basic Usage
 Mapping A Route
 ---------------
 
-To create a route for your application, instantiate a `Map` object from the `aura\router` package and call `add()`.
+To create a route for your application, instantiate a `Map` object from the `Aura\Router` package and call `add()`.
 
     <?php
     // create the map object
