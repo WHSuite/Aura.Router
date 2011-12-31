@@ -1,13 +1,12 @@
 ---
-title: Aura Router is a PHP 5.3+ library that implements web routing
+title: Aura for PHP: Web Routing Library
 layout: default
 ---
-
 
 Aura Router
 ===========
 
-Aura Router is a PHP 5.3+ library that implements web routing. Given a URI path and a copy of `$_SERVER`, it will extract controller, action, and parameter values for a specific application route.
+Aura Router is a PHP package that implements web routing. Given a URI path and a copy of `$_SERVER`, it will extract controller, action, and parameter values for a specific application route.
 
 Your application foundation or framework is expected to take the information provided by the matching route and dispatch to a controller on its own. As long as your system can provide a URI path string and a representative copy of `$_SERVER`, you can use Aura Router.
 
@@ -33,16 +32,16 @@ To create a route for your application, instantiate a `Map` object from the `Aur
     $map->add(null, '/{:controller}/{:action}/{:id}');
     
     // add a complex named route
-    $map->add('read', '/blog/read/{:id}{:format}', array(
-        'params' => array(
+    $map->add('read', '/blog/read/{:id}{:format}', [
+        'params' => [
             'id'     => '(\d+)',
             'format' => '(\..+)?',
-        ),
-        'values' => array(
+        ],
+        'values' => [
             'controller' => 'blog',
             'action'    => 'read'
             'format'    => 'html',
-        ),
+        ],
     ));
 
 You will need to place the `Map` object where you can get to it from your application; e.g., in a registry, a service locator, or a dependency injection container.  Describing such placement is beyond the scope of this document.
@@ -111,10 +110,10 @@ To generate a URI path from a route so that you can create links, call `generate
 
     <?php
     // $path => "/blog/read/42.atom"
-    $path = $map->generate('read', array(
+    $path = $map->generate('read', [
         'id' => 42,
         'format' => '.atom',
-    ));
+    ]);
     
     $href = htmlspecialchars($path, 'UTF-8');
     echo '<a href="$href">Atom feed for this blog entry</a>';
@@ -134,19 +133,19 @@ When you add a complex route specification, you describe extra information relat
 
 - `params` -- The regular expression subpatterns for path params; inline params will override these settings. For example:
         
-        'params' => array(
+        'params' => [
             'id' => '(\d+)',
-        )
+        ]
         
   Note that the path itself is allowed to contain param tokens with inline regular expressions; e.g., `/read/{:id:(\d+)}`.  This may be easier to read in some cases.
 
 - `values` -- The default values for the route. These will be overwritten by matching params from the path.
 
-        'values' => array(
+        'values' => [
             'controller' => 'blog',
             'action' => 'read',
             'id' => 1,
-        )
+        ]
         
 - `method` -- The `$server['REQUEST_METHOD']` must match one of these values.
 
@@ -161,19 +160,19 @@ When you add a complex route specification, you describe extra information relat
 Here is a full route specification named `read` with all keys in place:
 
     <?php
-    $map->add('read', '/blog/read/{:id}{:format}', array(
-        'params' => array(
+    $map->add('read', '/blog/read/{:id}{:format}', [
+        'params' => [
             'id' => '(\d+)',
             'format' => '(\..+)?',
-        ),
-        'values' => array(
+        ],
+        'values' => [
             'controller' => 'blog',
             'action' => 'read',
             'id' => 1,
             'format' => '.html',
-        ),
+        ],
         'secure' => false,
-        'method' => array('GET'),
+        'method' => ['GET'],
         'routable' => true,
         'is_match' => function(array $server, \ArrayObject $matches) {
                 
@@ -191,7 +190,7 @@ Here is a full route specification named `read` with all keys in place:
             $data['foo'] = 'bar';
             return $data;
         }
-    ));
+    ]);
 
 Note that using closures, instead of callbacks, means you will not be able to `serialize()` or `var_export()` the router map for caching.
 
@@ -207,16 +206,16 @@ You don't need to specify a complex route specification.  If you pass a string f
 ... then Aura Router will use a default subpattern that matches everything except slashes for the path params, and use the route name as the default value for `'action'`.  Thus, the above short-form route is equivalent to the following long-form route:
 
     <?php
-    $map->add('archive', '/archive/{:year}/{:month}/{:day}', array(
-        'params' => array(
+    $map->add('archive', '/archive/{:year}/{:month}/{:day}', [
+        'params' => [
             'year'  => '([^/]+)',
             'month' => '([^/]+)',
             'day'   => '([^/]+)',
-        ),
-        'values' => array(
+        ],
+        'values' => [
             'action' => 'archive',
-        ),
-    ));
+        ],
+    ]);
 
 
 Attaching Route Groups
@@ -225,29 +224,29 @@ Attaching Route Groups
 You can add a series of routes all at once under a single "mount point" in your application.  For example, if you want all your blog-related routes to be mounted at `'/blog'` in your application, you can do this:
 
     <?php
-    $map->attach('/blog', array(
+    $map->attach('/blog', [
         
         // the routes to attach
-        'routes' => array(
+        'routes' => [
             
             // a short-form route named 'browse'
             'browse' => '/',
             
             // a long-form route named 'read'
-            'read' => array(
+            'read' => [
                 'path' => '/{:id}{:format}',
-                'params' => array(
+                'params' => [
                     'id'     => '(\d+)',
                     'format' => '(\.json|\.atom)?'
-                ),
-                'values' => array(
+                ],
+                'values' => [
                     'format' => '.html',
-                ),
-            ),
+                ],
+            ],
             
             // a short-form route named 'edit'
             'edit' => '/{:id:(\d+)}/edit',
-        ),
+        ],
     ));
     
 Each of the route paths will be prefixed with `/blog`, so the effective paths become:
@@ -259,26 +258,26 @@ Each of the route paths will be prefixed with `/blog`, so the effective paths be
 You can set other route specification keys as part of the attachment specification; these will be used as the defaults for each attached route, so you don't need to repeat common information:
 
     <?php
-    $map->attach('/blog', array(
+    $map->attach('/blog', [
         
         // common params for the routes
-        'params' => array(
+        'params' => [
             'id'     => '(\d+)',
             'format' => '(\.json|\.atom)?',
-        ),
+        ],
         
         // common values for the routes
-        'values' => array(
+        'values' => [
             'controller' => 'blog',
             'format'     => '.html',
-        ),
+        ],
         
         // the routes to attach
-        'routes' => array(
+        'routes' => [
             'browse' => '/',
             'read'   => '/{:id}{:format}',
             'edit'   => '/{:id}/edit',
-        ),
+        ],
     ));
 
 
@@ -290,47 +289,47 @@ You can configure your routes in a single array of attachment groups, and then p
 Note that you can specify a `name_prefix` as part of the common route information for each attached route group; the route names in that group will be prefixed with that value. This helps with deconfliction of routes with the same names in different groups.
 
     <?php
-    $attach = array(
+    $attach = [
         // attach to /blog
-        '/blog' => array(
+        '/blog' => [
             
             // prefix for route names
             'name_prefix' => 'projectname.blog.',
             
             // common params for the routes
-            'params' => array(
+            'params' => [
                 'id' => '(\d+)',
                 'format' => '(\.json|\.atom)?',
-            ),
+            ],
         
             // common values for the routes
-            'values' => array(
+            'values' => [
                 'controller' => 'blog',
                 'format' => '.html',
-            ),
+            ],
         
             // the routes to attach
-            'routes' => array(
+            'routes' => [
                 'browse' => '/',
                 'read' => 'path' => '/{:id}{:format}',
                 'edit' => '/{:id}/edit',
-            ),
-        ),
+            ],
+        ],
         
         // attach to '/forum'
-        '/forum' => array(
+        '/forum' => [
             // prefix for route names
             'name_prefix' => 'projectname.forum.',
             // ...
-        ),
+        ],
     
         // attach to '/wiki'
-        '/wiki' => array(
+        '/wiki' => [
             // prefix for route names
             'name_prefix' => 'projectname.wiki.',
             // ...
-        ),
-    );
+        ],
+    ];
 
     // create the route factory
     $route_factory = new \Aura\Router\RouteFactory;
@@ -342,11 +341,11 @@ This technique can be very effective with modular application packages. Each pac
 
     <?php
     // get a routes array from each application packages
-    $attach = array(
+    $attach = [
         '/blog'  => require 'projectname/blog/routes.php',
         '/forum' => require 'projectname/forum/routes.php',
         '/wiki'  => require 'projectname/wiki/routes.php',
-    );
+    ];
     
     // create the route factory
     $route_factory = new \Aura\Router\RouteFactory;
