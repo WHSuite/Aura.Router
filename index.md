@@ -1,5 +1,5 @@
 ---
-title: Aura for PHP: Web Routing Library
+title: Aura for PHP -- Web Routing Library
 layout: default
 ---
 
