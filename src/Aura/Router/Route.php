@@ -352,7 +352,11 @@ class Route
         // use a callable to modify the path data?
         if ($this->generate) {
             $generate = $this->generate;
-            $data = $generate($this, (array) $data);
+            if(is_object($generate) && $generate instanceof Closure) {
+                $data = $generate($this, (array) $data);
+            } else {
+                $data = call_user_func($generate, $this, (array) $data);
+            }
         }
 
         // interpolate into the path
@@ -527,8 +531,11 @@ class Route
         // pass the matches as an object, not as an array, so we can avoid
         // tricky hacks for references
         $matches = new \ArrayObject($this->matches);
-        $result = $this->isMatch($server, $matches);
-
+        if(is_object($is_match) && $is_match instanceof Closure) {
+            $result = $is_match($server, $matches);
+        } else {
+            $result = call_user_func($is_match, $server, $matches);
+        }
         // convert back to array
         $this->matches = $matches->getArrayCopy();
 
