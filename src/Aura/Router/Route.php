@@ -531,6 +531,7 @@ class Route
         // pass the matches as an object, not as an array, so we can avoid
         // tricky hacks for references
         $matches = new \ArrayObject($this->matches);
+        $is_match = $this->is_match;
         if(is_object($is_match) && $is_match instanceof Closure) {
             $result = $is_match($server, $matches);
         } else {
