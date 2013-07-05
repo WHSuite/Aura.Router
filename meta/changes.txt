@@ -1,6 +1,8 @@
+- [CHG] Improved Aura.Router to make it PHP 5.3 compatible.
+
 - [CHG] Altered implementation of Route::generate() to encode param tokens
   using rawurlencode() instead of urlencode().
-    
+
 - [CHG] Altered the implementation of Route::isMatch() to decode matching
   parameters using rawurlencode().
 
